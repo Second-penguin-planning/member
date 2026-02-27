@@ -1,202 +1,38 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>業務アーカイブ（内部用）</title>
-
-<style>
-body { font-family: sans-serif; background:#f4f6f8; margin:0; }
-#login-box { text-align:center; margin-top:100px; }
-#archive { display:none; padding:30px; }
-h1 { border-bottom:2px solid #333; padding-bottom:5px; }
-.category { margin-top:25px; }
-.category h2 { background:#333; color:#fff; padding:8px; font-size:16px; }
-ul { list-style:none; padding-left:15px; }
-li { margin:6px 0; }
-a { text-decoration:none; color:#0066cc; cursor:pointer; }
-.content-box { margin-top:15px; padding:15px; background:#fff; border:1px solid #ddd; display:none; }
-button { padding:10px 20px; margin-top:5px; cursor:pointer; }
-textarea { width:100%; height:120px; }
-select, input { width:100%; padding:10px; margin-top:5px; box-sizing: border-box; }
-#form-area { background:#fff; padding:15px; border:1px solid #ccc; margin-bottom:20px; display:none; }
-#loading { color: blue; font-weight: bold; display: none; margin: 10px 0; }
-</style>
-
-<script>
-// ★設定されたGASのURL
-const GAS_URL = "https://script.google.com/macros/s/AKfycbxC4x4733pIhSbKQgXIRsiaI4JMSGltZbFDzLCcJ0IbKnO3QdVz72ms7s46mNh0-Goe/exec";
-
-// ログインチェック
-function checkPass() {
-    if(document.getElementById("pass").value === "2405"){
-        document.getElementById("login-box").style.display="none";
-        document.getElementById("archive").style.display="block";
-        loadEntries(); // ログイン成功時にデータを読み込む
-    } else { 
-        alert("パスコードが違います"); 
-    }
-}
-
-// コンテンツの表示
-function showContent(id){
-    document.querySelectorAll(".content-box").forEach(e => e.style.display="none");
-    const target = document.getElementById(id);
-    target.style.display="block";
-    window.scrollTo(0, target.offsetTop - 20);
-}
-
-// 登録フォームの表示切り替え
-function toggleForm(){
-    var f = document.getElementById("form-area");
-    f.style.display = (f.style.display==="none") ? "block" : "none";
-}
-
-// スプレッドシート（GAS経由）からデータを読み込む
-async function loadEntries(){
-    document.getElementById("loading").style.display = "block";
-    document.getElementById("loading").innerText = "データを読み込み中...";
-
-    try {
-        const response = await fetch(GAS_URL);
-        const entries = await response.json();
-
-        // 各カテゴリのリストを一旦空にする
-        const categories = ["nyukan", "hojokin", "seido", "kikaku", "data", "other"];
-        categories.forEach(cat => document.getElementById(cat + "-list").innerHTML = "");
-        document.getElementById("content-area").innerHTML = "";
-
-        // 取得したデータを画面に配置
-        entries.forEach((e, index) => {
-            const listId = e.category + "-list";
-            const targetList = document.getElementById(listId);
-            
-            if (targetList) {
-                // リスト項目を作成
-                var li = document.createElement("li");
-                li.innerHTML = `<a onclick="showContent('entry-${index}')">${e.title}</a>`;
-                targetList.appendChild(li);
-
-                // 詳細内容ボックスを作成
-                var div = document.createElement("div");
-                div.className = "content-box";
-                div.id = "entry-" + index;
-                div.innerHTML = `<h3>${e.title}</h3><p>${e.content.replace(/\n/g, "<br>")}</p>`;
-                document.getElementById("content-area").appendChild(div);
-            }
-        });
-    } catch (error) {
-        console.error("読み込みエラー:", error);
-        alert("データの読み込みに失敗しました。");
-    } finally {
-        document.getElementById("loading").style.display = "none";
-    }
-}
-
-// スプレッドシート（GAS経由）にデータを保存する
-async function saveEntry(){
-    var category = document.getElementById("category").value;
-    var title = document.getElementById("title").value;
-    var content = document.getElementById("content").value;
-
-    if(!title || !content){ 
-        alert("項目と内容は必須です"); 
-        return; 
+function doPost(e) {
+  try {
+    var params = JSON.parse(e.postData.contents);
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    
+    // ここでシート名を指定しています。スプレッドシートのタブ名と一致させる必要があります。
+    var sheet = ss.getSheetByName('Sheet1'); 
+    
+    if (!sheet) {
+      throw new Error("シート 'Sheet1' が見つかりません。タブ名を確認してください。");
     }
 
-    document.getElementById("loading").style.display = "block";
-    document.getElementById("loading").innerText = "保存中...";
+    sheet.appendRow([params.category, params.title, params.content]);
+    
+    return ContentService.createTextOutput("Success")
+      .setMimeType(ContentService.MimeType.TEXT);
 
-    try {
-        // GASにPOST送信
-        await fetch(GAS_URL, {
-            method: "POST",
-            body: JSON.stringify({
-                method: "save",
-                category: category,
-                title: title,
-                content: content
-            })
-        });
-
-        alert("スプレッドシートに保存しました");
-        document.getElementById("title").value = "";
-        document.getElementById("content").value = "";
-        toggleForm(); // フォームを閉じる
-        loadEntries(); // リストを最新の状態に更新
-    } catch (error) {
-        console.error("保存エラー:", error);
-        alert("保存に失敗しました。GASのデプロイ設定を確認してください。");
-    } finally {
-        document.getElementById("loading").style.display = "none";
-    }
+  } catch (f) {
+    // エラーが起きた場合、その内容を返却するようにします
+    return ContentService.createTextOutput("Error: " + f.message)
+      .setMimeType(ContentService.MimeType.TEXT);
+  }
 }
-</script>
-</head>
 
-<body>
-
-<div id="login-box">
-    <h2>業務アーカイブ（内部用）</h2>
-    <p>4桁のパスコード</p>
-    <input type="password" id="pass" maxlength="4">
-    <button onclick="checkPass()">ログイン</button>
-</div>
-
-<div id="archive">
-    <h1>業務アーカイブ</h1>
-
-    <button onclick="toggleForm()">＋ 新規掲載登録</button>
-    <div id="loading">処理中...</div>
-
-    <div id="form-area">
-        <h3>掲載登録フォーム</h3>
-        <select id="category">
-            <option value="nyukan">入管</option>
-            <option value="hojokin">補助金</option>
-            <option value="seido">制度</option>
-            <option value="kikaku">事業企画</option>
-            <option value="data">データ管理</option>
-            <option value="other">その他</option>
-        </select>
-
-        <input type="text" id="title" placeholder="項目名">
-        <textarea id="content" placeholder="内容（長文可）"></textarea>
-        <button onclick="saveEntry()">保存</button>
-    </div>
-
-    <div class="category">
-        <h2>入管</h2>
-        <ul id="nyukan-list"></ul>
-    </div>
-
-    <div class="category">
-        <h2>補助金</h2>
-        <ul id="hojokin-list"></ul>
-    </div>
-
-    <div class="category">
-        <h2>制度</h2>
-        <ul id="seido-list"></ul>
-    </div>
-
-    <div class="category">
-        <h2>事業企画</h2>
-        <ul id="kikaku-list"></ul>
-    </div>
-
-    <div class="category">
-        <h2>データ管理</h2>
-        <ul id="data-list"></ul>
-    </div>
-
-    <div class="category">
-        <h2>その他</h2>
-        <ul id="other-list"></ul>
-    </div>
-
-    <div id="content-area"></div>
-
-</div>
-</body>
-</html>
+function doGet() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName('Sheet1');
+  if (!sheet) return ContentService.createTextOutput(JSON.stringify([])).setMimeType(ContentService.MimeType.JSON);
+  
+  var values = sheet.getDataRange().getValues();
+  if (values.length <= 1) return ContentService.createTextOutput(JSON.stringify([])).setMimeType(ContentService.MimeType.JSON);
+  
+  values.shift(); 
+  var data = values.map(function(row) {
+    return { category: row[0], title: row[1], content: row[2] };
+  });
+  return ContentService.createTextOutput(JSON.stringify(data)).setMimeType(ContentService.MimeType.JSON);
+}
