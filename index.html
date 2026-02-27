@@ -145,17 +145,24 @@ textarea {
 
 <script>
 // ★設定されたGASのURL
-const GAS_URL = "https://script.google.com/macros/s/AKfycbxGVi-nCBEzVeq0DDUV_8ThxEUq8-AO_2J7TsHp_rlOPamu2gMkwdzReLSAbSflpi2F/exec
-";
+const GAS_URL = "https://script.google.com/macros/s/AKfycbxGVi-nCBEzVeq0DDUV_8ThxEUq8-AO_2J7TsHp_rlOPamu2gMkwdzReLSAbSflpi2F/exec";
 
 // ログインチェック
 function checkPass() {
+    // パスコードを 2405 に設定
     if(document.getElementById("pass").value === "2405"){
         document.getElementById("login-box").style.display="none";
         document.getElementById("archive").style.display="block";
         loadEntries();
     } else { 
         alert("パスコードが違います"); 
+    }
+}
+
+// エンターキーでログインできるようにする処理
+function handleKeyPress(event) {
+    if (event.key === "Enter") {
+        checkPass();
     }
 }
 
@@ -253,7 +260,7 @@ async function saveEntry(){
 <div id="login-box">
     <h2>業務アーカイブ（内部用）</h2>
     <p>4桁のパスコード</p>
-    <input type="password" id="pass" maxlength="4">
+    <input type="password" id="pass" maxlength="4" onkeypress="handleKeyPress(event)">
     <br>
     <button onclick="checkPass()">ログイン</button>
 </div>
@@ -283,7 +290,7 @@ async function saveEntry(){
     <div class="category"><h2>入管</h2><ul id="nyukan-list"></ul></div>
     <div class="category"><h2>補助金</h2><ul id="hojokin-list"></ul></div>
     <div class="category"><h2>制度</h2><ul id="seido-list"></ul></div>
-    <div class="category"><h2>事業企画</h2><ul id="kikaku-list"></ul></div>
+    <div class="category)</h2>事業企画</h2><ul id="kikaku-list"></ul></div>
     <div class="category"><h2>データ管理</h2><ul id="data-list"></ul></div>
     <div class="category"><h2>その他</h2><ul id="other-list"></ul></div>
 
