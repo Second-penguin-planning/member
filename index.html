@@ -13,7 +13,7 @@ body {
     color:#333;
 }
 
-/* ===== ログイン画面 ===== */
+/* ログイン画面 */
 #login-box {
     width: 320px;
     margin: 120px auto;
@@ -38,7 +38,7 @@ body {
     margin-top:15px;
 }
 
-/* ===== メインエリア ===== */
+/* メイン */
 #archive {
     display:none;
     padding:40px;
@@ -52,7 +52,6 @@ h1 {
     margin-bottom:25px;
 }
 
-/* ===== カテゴリ ===== */
 .category {
     margin-top:35px;
 }
@@ -85,7 +84,6 @@ a:hover {
     text-decoration:underline;
 }
 
-/* ===== コンテンツ表示 ===== */
 .content-box {
     margin-top:20px;
     padding:20px;
@@ -96,7 +94,6 @@ a:hover {
     display:none;
 }
 
-/* ===== ボタン ===== */
 button {
     padding:10px 18px;
     margin-top:5px;
@@ -112,7 +109,6 @@ button:hover {
     background:#005fa3;
 }
 
-/* ===== フォーム ===== */
 #form-area {
     background:#ffffff;
     padding:20px;
@@ -144,10 +140,9 @@ textarea {
 </style>
 
 <script>
-// ★設定されたGASのURL
 const GAS_URL = "https://script.google.com/macros/s/AKfycbxGVi-nCBEzVeq0DDUV_8ThxEUq8-AO_2J7TsHp_rlOPamu2gMkwdzReLSAbSflpi2F/exec";
 
-// ログインチェック
+/* ログイン */
 function checkPass() {
     if(document.getElementById("pass").value === "2405"){
         document.getElementById("login-box").style.display="none";
@@ -158,28 +153,34 @@ function checkPass() {
     }
 }
 
-// エンターキーでログインできるようにする処理
 function handleKeyPress(event) {
     if (event.key === "Enter") {
         checkPass();
     }
 }
 
-// コンテンツ表示
+/* URL付き表示 */
 function showContent(id){
-    document.querySelectorAll(".content-box").forEach(e => e.style.display="none");
-    const target = document.getElementById(id);
-    target.style.display="block";
-    window.scrollTo({ top: target.offsetTop - 20, behavior:"smooth" });
+    history.pushState(null, null, "?entry=" + id);
+    displayContent(id);
 }
 
-// フォーム表示切替
+function displayContent(id){
+    document.querySelectorAll(".content-box").forEach(e => e.style.display="none");
+    const target = document.getElementById(id);
+    if(target){
+        target.style.display="block";
+        window.scrollTo({ top: target.offsetTop - 20, behavior:"smooth" });
+    }
+}
+
+/* フォーム表示 */
 function toggleForm(){
     var f = document.getElementById("form-area");
     f.style.display = (f.style.display==="none") ? "block" : "none";
 }
 
-// データ読み込み
+/* データ読み込み */
 async function loadEntries(){
     document.getElementById("loading").style.display = "block";
     document.getElementById("loading").innerText = "データを読み込み中...";
@@ -193,15 +194,16 @@ async function loadEntries(){
             const el = document.getElementById(cat + "-list");
             if(el) el.innerHTML = "";
         });
+
         document.getElementById("content-area").innerHTML = "";
 
         entries.forEach((e, index) => {
             const listId = e.category + "-list";
             const targetList = document.getElementById(listId);
-            
+
             if (targetList) {
                 var li = document.createElement("li");
-                li.innerHTML = `<a onclick="showContent('entry-${index}')">${e.title}</a>`;
+                li.innerHTML = `<a href="?entry=entry-${index}" onclick="event.preventDefault(); showContent('entry-${index}')">${e.title}</a>`;
                 targetList.appendChild(li);
 
                 var div = document.createElement("div");
@@ -211,15 +213,22 @@ async function loadEntries(){
                 document.getElementById("content-area").appendChild(div);
             }
         });
+
+        /* URLにentryがある場合自動表示 */
+        const params = new URLSearchParams(window.location.search);
+        const entryId = params.get("entry");
+        if(entryId){
+            setTimeout(() => displayContent(entryId), 300);
+        }
+
     } catch (error) {
-        console.error(error);
         alert("データの読み込みに失敗しました。");
     } finally {
         document.getElementById("loading").style.display = "none";
     }
 }
 
-// 保存処理
+/* 保存処理 */
 async function saveEntry(){
     var category = document.getElementById("category").value;
     var title = document.getElementById("title").value;
@@ -249,6 +258,7 @@ async function saveEntry(){
         document.getElementById("content").value = "";
         toggleForm();
         loadEntries();
+
     } catch (error) {
         alert("保存に失敗しました。");
     } finally {
