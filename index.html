@@ -299,7 +299,100 @@ async function saveEntry(){
 
 <div id="archive">
     <h1>業務アーカイブ</h1>
+<!-- ===== SP-APPS SECTION START ===== -->
+<section id="sp-apps" class="sp-apps">
+    <div class="sp-apps__inner">
+        <p class="sp-apps__eyebrow">SECOND PENGUIN PLANNING GROUP</p>
+        <h2 class="sp-apps__title">セコンドペンギン企画のサービス一覧</h2>
 
+        <div class="sp-apps__group sp-apps__group--primary">
+            <h3 class="sp-apps__group-title">雇用・ビザ支援</h3>
+            <div class="sp-apps__grid">
+                <a href="#employment-detail" class="sp-apps__card sp-apps__card--primary">
+                    <span class="sp-apps__card-title">外国人雇用支援</span>
+                    <span class="sp-apps__card-desc">特定技能・技能実習など、企業向け外国人雇用のトータルサポート</span>
+                </a>
+                <a href="https://tokunaga-gyosei.jp/" target="_blank" rel="noopener" class="sp-apps__card sp-apps__card--primary">
+                    <span class="sp-apps__card-title">行政書士・ビザ申請サポート</span>
+                    <span class="sp-apps__card-desc">在留資格申請、永住・帰化など、個人・企業双方の手続き支援</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="sp-apps__group sp-apps__group--secondary">
+            <h3 class="sp-apps__group-title">日本語学習＆キャリア準備ツール</h3>
+            <div class="sp-apps__grid sp-apps__grid--secondary">
+                <a href="https://second-penguin-planning.github.io/japanese-study-diagnosis/" target="_blank" rel="noopener" class="sp-apps__card">
+                    <span class="sp-apps__card-title">日本語学習タイプ診断</span>
+                    <span class="sp-apps__card-desc">3分でわかる、あなたに合った勉強法（無料）</span>
+                </a>
+                <a href="https://resume-system-nine.vercel.app/" target="_blank" rel="noopener" class="sp-apps__card">
+                    <span class="sp-apps__card-title">日本式レジュメ作成</span>
+                    <span class="sp-apps__card-desc">外国人求職者向け、日本式履歴書の自動作成・求職者登録</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="sp-apps__group sp-apps__group--secondary">
+            <h3 class="sp-apps__group-title">タウン情報</h3>
+            <div class="sp-apps__grid sp-apps__grid--secondary">
+                <a href="https://second-penguin-planning.github.io/hotel-guide/" target="_blank" rel="noopener" class="sp-apps__card">
+                    <span class="sp-apps__card-title">レストランガイド</span>
+                    <span class="sp-apps__card-desc">ホテル宿泊者向け、周辺の飲食店・ショップ案内</span>
+                </a>
+                <a href="https://second-penguin-planning.github.io/kobe-gourmet-guide/" target="_blank" rel="noopener" class="sp-apps__card">
+                    <span class="sp-apps__card-title">神戸グルメガイド</span>
+                    <span class="sp-apps__card-desc">ホテル宿泊者向け、神戸の飲食店案内</span>
+                </a>
+                <a href="https://second-penguin-planning.github.io/kobe-inbound-guide/" target="_blank" rel="noopener" class="sp-apps__card">
+                    <span class="sp-apps__card-title">神戸緊急プラットフォーム</span>
+                    <span class="sp-apps__card-desc">神戸在住の外国人・観光客のための緊急情報＆観光ガイド</span>
+                </a>
+                <a href="https://second-penguin-planning.github.io/osaka-kitashinchi-guide/" target="_blank" rel="noopener" class="sp-apps__card">
+                    <span class="sp-apps__card-title">MG Navi</span>
+                    <span class="sp-apps__card-desc">北新地・大阪駅エリアの地域案内</span>
+                </a>
+                <a href="https://second-penguin-planning.github.io/kobe-community-guide/" target="_blank" rel="noopener" class="sp-apps__card">
+                    <span class="sp-apps__card-title">ハラルコミュニティガイド</span>
+                    <span class="sp-apps__card-desc">バングラデシュ人・ネパール人向け、神戸（東灘〜元町）のハラル・コミュニティガイド</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="sp-apps__group sp-apps__group--secondary">
+            <h3 class="sp-apps__group-title">オンラインミュージアム</h3>
+            <div class="sp-apps__grid sp-apps__grid--secondary">
+                <a href="https://second-penguin-planning.github.io/online-museum/ja/" target="_blank" rel="noopener" class="sp-apps__card">
+                    <span class="sp-apps__card-title">徳永アートミュージアム</span>
+                    <span class="sp-apps__card-desc">代表・徳永卓磨のアート作品をオンライン展示</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+<style>
+    .sp-apps { padding: 70px 20px; background: #f7f9fb; text-align: center; }
+    .sp-apps__inner { max-width: 1000px; margin: 0 auto; }
+    .sp-apps__eyebrow { font-size: 12px; letter-spacing: 0.15em; color: #7a8a99; font-weight: 700; margin-bottom: 8px; }
+    .sp-apps__title { font-size: 26px; font-weight: 700; color: #1f2f3a; margin-bottom: 44px; }
+    .sp-apps__group { margin-bottom: 40px; }
+    .sp-apps__group:last-child { margin-bottom: 0; }
+    .sp-apps__group-title { text-align: left; font-weight: 700; margin-bottom: 16px; }
+    .sp-apps__group--primary .sp-apps__group-title { font-size: 21px; color: #005bac; }
+    .sp-apps__group--secondary .sp-apps__group-title { font-size: 13px; color: #8a97a3; letter-spacing: 0.05em; }
+    .sp-apps__grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .sp-apps__card { display: flex; flex-direction: column; gap: 8px; padding: 26px; border-radius: 14px; text-align: left; text-decoration: none; background: #fff; border: 1px solid #e2e8ef; transition: transform 0.2s, box-shadow 0.2s; }
+    .sp-apps__card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+    .sp-apps__card--primary { background: #eaf2fb; border: 1px solid #bcd6ef; }
+    .sp-apps__card--primary .sp-apps__card-title { font-size: 18px; }
+    .sp-apps__card-title { font-weight: 700; color: #1f2f3a; font-size: 15px; }
+    .sp-apps__grid--secondary .sp-apps__card-title { font-size: 14px; }
+    .sp-apps__card-desc { font-size: 13px; color: #5c6b78; line-height: 1.6; }
+    @media (max-width: 640px) {
+        .sp-apps__grid, .sp-apps__grid--secondary { grid-template-columns: 1fr; }
+    }
+</style>
+<!-- ===== SP-APPS SECTION END ===== -->
     <button onclick="toggleForm()">＋ 新規掲載登録</button>
     <div id="loading">処理中...</div>
 
